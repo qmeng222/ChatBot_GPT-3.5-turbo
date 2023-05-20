@@ -6,6 +6,25 @@ config = dotenv_values(".env")
 openai.api_key = config["OPENAI_API_KEY"]
 
 
+# helper functions to colorize the chat history:
+def bold(text):
+    bold_start = "\033[1m"
+    bold_end = "\033[0m"
+    return bold_start + text + bold_end
+
+def blue(text):
+    blue_start = "\033[34m"
+    blue_end = "\033[0m"
+    return blue_start + text + blue_end
+
+def red(text):
+    red_start = "\033[31m"
+    red_end = "\033[0m"
+    return red_start + text + red_end
+
+# print("\033[31mHELLO\033[0m")  # "HELLO" in red
+
+
 def main():
   parser = argparse.ArgumentParser(description="Simple command line chatbot")
   parser.add_argument("--personality", type=str, help="A brief summary of the chatbot's personality or its main function", default="friendly and helpful")
@@ -19,7 +38,7 @@ def main():
   while True:
     try:
       # user's input:
-      user_input = input("User: ")
+      user_input = input(bold(red("User: ")))
       messages.append({"role": "user", "content": user_input})
 
       # assistant's response:
@@ -29,7 +48,7 @@ def main():
           max_tokens=200,
       )
       messages.append(res.choices[0].message.to_dict())
-      print("Assistant: ", res.choices[0].message.content)
+      print(bold(blue("Assistant: ")), res.choices[0].message.content)
 
       # # complete message history:
       # print("All messages: ", messages)
